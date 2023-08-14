@@ -32,7 +32,7 @@ iptables -I PREROUTING 2 -t mangle -p all $CMD_COMMENT \
 
 # data: TSEQ | hashlimit: srcip,dstport | limit: 6/min | j: DROP
 iptables -I PREROUTING 1 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
-	-m string --algo bm --hex-string |$PKT_A2S| \
+	-m string --algo bm --hex-string "|$PKT_A2S|" \
 	-m hashlimit \
 		--hashlimit-name tseq \
 		--hashlimit-mode srcip,dstport \
@@ -42,24 +42,24 @@ iptables -I PREROUTING 1 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 
 # data: TSEQ | limit: 100/sec | j: ACCEPT | else: DROP
 iptables -I PREROUTING 2 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
-	-m string --algo bm --hex-string |$PKT_A2S| \
+	-m string --algo bm --hex-string "|$PKT_A2S|" \
 	-m limit --limit 100/sec
 	-j ACCEPT
 
 iptables -I PREROUTING 3 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
-	-m string --algo bm --hex-string |$PKT_A2S| \
+	-m string --algo bm --hex-string "|$PKT_A2S|" \
 	-j DROP
 	
 
 # Log flair signon and add to signed_on set
 iptables -I PREROUTING 4 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
-	-m string --algo bm --hex-string |$PKT_LOG| \
+	-m string --algo bm --hex-string "|$PKT_LOG|" \
 	-m length --length 48 --from 26 --to 48 \
 	-j LOG \
 	-m limit --limit 250/min --log-ip-options --log-level error --log-prefix "<|srcds-ipt|> signon: "
 
 iptables -I PREROUTING 5 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
-	-m string --algo bm --hex-string |$PKT_LOG| \
+	-m string --algo bm --hex-string "|$PKT_LOG|" \
 	-m length --length 48 --from 26 --to 48 \
 	-j SET --add-set signed_on src,dst --timeout 5
 
