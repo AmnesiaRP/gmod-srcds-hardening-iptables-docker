@@ -65,29 +65,29 @@ iptables -I PREROUTING 5 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 
 
 # Log and DROP small packets
-iptables -I PREROUTING 7 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
+iptables -I PREROUTING 6 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m length --length 0:32 \
 	-j LOG \
 	-m limit --limit 2/min --log-ip-options --log-prefix "<|srcds-ipt|> len < 32: "
 
-iptables -I PREROUTING 8 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
+iptables -I PREROUTING 7 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m length --length 0:32 \
 	-j DROP
 
 
 # Log and DROP bigass packets
-iptables -I PREROUTING 9 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
+iptables -I PREROUTING 8 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m length --length 2521:65535 \
 	-j LOG \
 	-m limit --limit 2/min --log-ip-options --log-prefix "<|srcds-ipt|> len > 2521: "
 
-iptables -I PREROUTING 10 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
+iptables -I PREROUTING 9 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m length --length 2521:65535 \
 	-j DROP
 
 
 # Rate limit permatrusted (ACCEPT should be removed)
-iptables -I PREROUTING 11 $CMD_BASE $CMD_COMMENT \
+iptables -I PREROUTING 10 $CMD_BASE $CMD_COMMENT \
 	-m set --match-set permatrusted src \
 	-m hashlimit \
 		--hashlimit-name validated_speedlimit \
@@ -96,13 +96,13 @@ iptables -I PREROUTING 11 $CMD_BASE $CMD_COMMENT \
 		--hashlimit-burst 80 \
 	-j DROP
 
-iptables -I PREROUTING 12 $CMD_BASE $CMD_COMMENT \
+iptables -I PREROUTING 11 $CMD_BASE $CMD_COMMENT \
 	-m set --match-set permatrusted src \
 	-j ACCEPT
 
 
 # Rate limit flair loged (should be replaced with a very strict burst)
-iptables -I PREROUTING 13 $CMD_BASE $CMD_COMMENT \
+iptables -I PREROUTING 12 $CMD_BASE $CMD_COMMENT \
 	-m set --match-set signed_on src,dst \
 	-m hashlimit \
 		--hashlimit-name signedon_speedlimit \
@@ -111,13 +111,13 @@ iptables -I PREROUTING 13 $CMD_BASE $CMD_COMMENT \
 		--hashlimit-burst 20 \
 	-j DROP
 
-iptables -I PREROUTING 14 $CMD_BASE $CMD_COMMENT \
+iptables -I PREROUTING 13 $CMD_BASE $CMD_COMMENT \
 	-m set --match-set signed_on src,dst \
 	-j ACCEPT
 
 
 # Not loged udp spam limit
-iptables -I PREROUTING 15 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
+iptables -I PREROUTING 14 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m hashlimit \
 		--hashlimit-name speedlimit \
 		--hashlimit-mode srcip,dstport \
@@ -128,7 +128,7 @@ iptables -I PREROUTING 15 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-j LOG \
 	-m limit --limit 2/min --log-ip-options --log-prefix "<|srcds-ipt|> udp spam: "
  
-iptables -I PREROUTING 16 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
+iptables -I PREROUTING 15 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m hashlimit \
 		--hashlimit-name speedlimit \
 		--hashlimit-mode srcip,dstport \
