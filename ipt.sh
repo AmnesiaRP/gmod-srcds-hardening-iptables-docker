@@ -40,10 +40,10 @@ iptables -I PREROUTING 1 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 		--hashlimit-burst 8 \
 	-j DROP
 
-# data: TSEQ | limit: 100/sec | j: ACCEPT | else: DROP
+# data: TSEQ | limit: 20/sec | j: ACCEPT | else: DROP
 iptables -I PREROUTING 2 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m string --algo bm --hex-string "|$PKT_A2S|" \
-	-m limit --limit 100/sec \
+	-m limit --limit 20/sec --limit-burst 50 \
 	-j ACCEPT
 
 iptables -I PREROUTING 3 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
