@@ -69,7 +69,7 @@ iptables -I PREROUTING 5 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 iptables -I PREROUTING 6 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m string --algo bm --hex-string "|$PKT_LOG|" \
 	-m length --length 48 --from 26 --to 48 \
-	-j SET --add-set signed_on src,dst --timeout 5
+	-j SET --add-set signed_on src,dst --timeout 2
 
 
 # Log and DROP small packets
@@ -100,8 +100,8 @@ iptables -I PREROUTING 11 $CMD_BASE $CMD_COMMENT \
 	-m hashlimit \
 		--hashlimit-name validated_speedlimit \
 		--hashlimit-mode srcip,dstport \
-		--hashlimit-above 72/sec \
-		--hashlimit-burst 80 \
+		--hashlimit-above 50/sec \
+		--hashlimit-burst 54 \
 	-j DROP
 
 iptables -I PREROUTING 12 $CMD_BASE $CMD_COMMENT \
@@ -115,8 +115,8 @@ iptables -I PREROUTING 13 $CMD_BASE $CMD_COMMENT \
 	-m hashlimit \
 		--hashlimit-name signedon_speedlimit \
 		--hashlimit-mode srcip,dstport \
-		--hashlimit-above 18/sec \
-		--hashlimit-burst 20 \
+		--hashlimit-above 16/sec \
+		--hashlimit-burst 18 \
 	-j DROP
 
 iptables -I PREROUTING 14 $CMD_BASE $CMD_COMMENT \
@@ -129,8 +129,8 @@ iptables -I PREROUTING 15 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m hashlimit \
 		--hashlimit-name speedlimit \
 		--hashlimit-mode srcip,dstport \
-		--hashlimit-above 7/sec \
-		--hashlimit-burst 9 \
+		--hashlimit-above 6/sec \
+		--hashlimit-burst 10 \
 	-m set ! --match-set permatrusted src \
 	-m set ! --match-set signed_on src,dst \
 	-j LOG \
@@ -140,8 +140,8 @@ iptables -I PREROUTING 16 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m hashlimit \
 		--hashlimit-name speedlimit \
 		--hashlimit-mode srcip,dstport \
-		--hashlimit-above 7/sec \
-		--hashlimit-burst 9 \
+		--hashlimit-above 6/sec \
+		--hashlimit-burst 10 \
 	-m set ! --match-set permatrusted src \
 	-m set ! --match-set signed_on src,dst \
 	-j DROP
