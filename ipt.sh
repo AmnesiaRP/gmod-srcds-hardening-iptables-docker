@@ -95,7 +95,7 @@ iptables -I PREROUTING 10 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 
 
 # Rate limit permatrusted
-iptables -I PREROUTING 11 $CMD_BASE $CMD_COMMENT \
+iptables -I PREROUTING 11 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m set --match-set permatrusted src \
 	-m hashlimit \
 		--hashlimit-name validated_speedlimit \
@@ -106,7 +106,7 @@ iptables -I PREROUTING 11 $CMD_BASE $CMD_COMMENT \
 
 
 # Rate limit flair loged (should be replaced with a very strict burst)
-iptables -I PREROUTING 12 $CMD_BASE $CMD_COMMENT \
+iptables -I PREROUTING 12 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m set --match-set signed_on src,dst \
 	-m set ! --match-set permatrusted src \
 	-m hashlimit \
