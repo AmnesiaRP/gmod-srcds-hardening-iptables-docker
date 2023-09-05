@@ -50,15 +50,15 @@ iptables -I PREROUTING 3 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m hashlimit \
 		--hashlimit-name tseq \
 		--hashlimit-mode srcip,dstport \
-		--hashlimit-above 8/min \
-		--hashlimit-burst 10 \
+		--hashlimit-above 10/min \
+		--hashlimit-burst 20 \
 	-j DROP
 
 
 # data: A2S | limit: 20/sec | j: ACCEPT | else: LOG & DROP
 iptables -I PREROUTING 4 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
 	-m string --algo bm --hex-string "|$PKT_A2S|" \
-	-m limit --limit 20/sec --limit-burst 50 \
+	-m limit --limit 30/sec --limit-burst 60 \
 	-j ACCEPT
 
 iptables -I PREROUTING 5 $CMD_BASE $CMD_COMMENT $CMD_PORTS \
